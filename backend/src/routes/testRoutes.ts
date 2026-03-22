@@ -3,7 +3,7 @@ import { getTest } from "../controllers/testController";
 
 const router = Router();
 
-router.get("/test", getTest);
+router.get("/", getTest);
 
 export default router;
 
