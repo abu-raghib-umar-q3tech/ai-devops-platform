@@ -1,6 +1,7 @@
 import { useState, type ComponentProps } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { AppBrandLockup } from "../components/AppBrand";
 import { signup } from "../services/api";
 
 type SubmitEvent = Parameters<NonNullable<ComponentProps<"form">["onSubmit"]>>[0];
@@ -34,9 +35,10 @@ export function SignupPage() {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-md items-center px-4">
       <div className="w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <AppBrandLockup variant="auth" className="mb-6" />
         <h1 className="mb-1 text-2xl font-semibold">Create account</h1>
         <p className="mb-6 text-sm text-slate-600 dark:text-slate-300">
-          Start analyzing your logs with AI.
+          Create an account to use the dashboard and analysis tools.
         </p>
 
         <form className="space-y-4" onSubmit={onSubmit}>

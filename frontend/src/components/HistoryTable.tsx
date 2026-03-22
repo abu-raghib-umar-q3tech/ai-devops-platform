@@ -1,5 +1,6 @@
 import type { HistoryItem } from "../services/api";
 import { CodeSnippet } from "./CodeSnippet";
+import { LogPreviewCell } from "./LogPreviewCell";
 
 type HistoryTableProps = {
   rows: HistoryItem[];
@@ -117,17 +118,17 @@ export function HistoryTable({
               className="cursor-pointer border-b border-slate-100 align-top transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70"
               onClick={() => onRowClick?.(row)}
             >
-              <td className="max-w-xs px-4 py-3 text-slate-700 dark:text-slate-200">
+              <td className="max-w-xs min-w-0 px-4 py-3 text-slate-700 dark:text-slate-200">
                 <CodeSnippet
                   text={row.input}
                   maxHeightClassName="max-h-24"
                 />
               </td>
-              <td className="max-w-xs px-4 py-3 text-slate-700 dark:text-slate-200">
-                {row.output.analysis}
+              <td className="max-w-xs min-w-0 px-4 py-3 text-slate-700 dark:text-slate-200">
+                <LogPreviewCell text={row.output.analysis} />
               </td>
-              <td className="max-w-xs px-4 py-3 text-slate-700 dark:text-slate-200">
-                {row.output.fix}
+              <td className="max-w-xs min-w-0 px-4 py-3 text-slate-700 dark:text-slate-200">
+                <LogPreviewCell text={row.output.fix} />
               </td>
               <td className="whitespace-nowrap px-4 py-3 text-slate-500 dark:text-slate-400">
                 {formatTimestamp(row.createdAt)}
