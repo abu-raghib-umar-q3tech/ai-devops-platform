@@ -11,6 +11,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { AppBrandLockup } from "../components/AppBrand";
 import { CodeSnippet } from "../components/CodeSnippet";
 import { DarkModeToggle } from "../components/DarkModeToggle";
 import { HistoryTable } from "../components/HistoryTable";
@@ -313,7 +314,7 @@ export function DashboardPage({
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold">AI Log Analyzer Dashboard</h1>
+        <AppBrandLockup variant="page" />
         <div className="flex items-center gap-2">
           {isAdmin ? (
             <button

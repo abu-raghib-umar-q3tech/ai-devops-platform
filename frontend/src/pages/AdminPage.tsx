@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AppBrandAdminHeading } from "../components/AppBrand";
+import { CodeSnippet } from "../components/CodeSnippet";
 import { ConfirmModal } from "../components/ConfirmModal";
+import { LogPreviewCell } from "../components/LogPreviewCell";
 import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
@@ -172,22 +175,24 @@ function LogsTableSkeleton({ rows }: { rows: number }) {
           key={i}
           className="border-b border-slate-100 dark:border-slate-800"
         >
-          <td className="px-3 py-2">
+          <td className="px-4 py-3 align-top">
             <ShimmerBlock className="h-4 w-24" />
           </td>
-          <td className="max-w-xs px-3 py-2">
+          <td className="max-w-xs px-4 py-3 align-top">
+            <ShimmerBlock className="h-16 w-full min-h-[4rem]" />
+          </td>
+          <td className="max-w-xs px-4 py-3 align-top">
             <ShimmerBlock className="h-4 w-full" />
+            <ShimmerBlock className="mt-2 h-3 w-4/5 max-w-[12rem]" />
           </td>
-          <td className="px-3 py-2">
-            <ShimmerBlock className="h-4 w-32" />
+          <td className="max-w-xs px-4 py-3 align-top">
+            <ShimmerBlock className="h-4 w-full" />
+            <ShimmerBlock className="mt-2 h-3 w-3/5 max-w-[10rem]" />
           </td>
-          <td className="px-3 py-2">
-            <ShimmerBlock className="h-4 w-28" />
-          </td>
-          <td className="px-3 py-2">
+          <td className="px-4 py-3 align-top">
             <ShimmerBlock className="h-4 w-36" />
           </td>
-          <td className="px-3 py-2">
+          <td className="px-4 py-3 align-top">
             <div className="flex gap-2">
               <ShimmerBlock className="h-7 w-16" />
               <ShimmerBlock className="h-7 w-16" />
@@ -710,7 +715,7 @@ export function AdminPage() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 py-8">
       <header className="mb-6 flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+        <AppBrandAdminHeading />
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -833,7 +838,7 @@ export function AdminPage() {
             ) : null}
           </div>
         </div>
-        <div className="max-h-[28rem] overflow-auto rounded-lg border border-slate-200 dark:border-slate-800">
+        <div className="max-h-[28rem] overflow-auto rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <table className="min-w-full text-left text-sm">
             <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800">
               <tr>
@@ -999,16 +1004,16 @@ export function AdminPage() {
             className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 transition focus:ring-2 dark:border-slate-700 dark:bg-slate-900"
           />
         </div>
-        <div className="max-h-[28rem] overflow-auto rounded-lg border border-slate-200 dark:border-slate-800">
+        <div className="max-h-[28rem] overflow-auto rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
           <table className="min-w-full text-left text-sm">
-            <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800">
+            <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200">
               <tr>
-                <th className="px-3 py-2">User ID</th>
-                <th className="px-3 py-2">Input</th>
-                <th className="px-3 py-2">Analysis</th>
-                <th className="px-3 py-2">Fix</th>
-                <th className="px-3 py-2">Created</th>
-                <th className="px-3 py-2">Actions</th>
+                <th className="px-4 py-3">User ID</th>
+                <th className="px-4 py-3">Input</th>
+                <th className="px-4 py-3">Analysis</th>
+                <th className="px-4 py-3">Fix</th>
+                <th className="px-4 py-3">Created</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
             {loading ? (
@@ -1019,7 +1024,7 @@ export function AdminPage() {
                   <tr>
                     <td
                       colSpan={6}
-                      className="px-3 py-10 text-center text-sm text-slate-500 dark:text-slate-400"
+                      className="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400"
                     >
                       No results found for this page
                     </td>
@@ -1028,18 +1033,29 @@ export function AdminPage() {
                   logs.map((log) => (
                     <tr
                       key={log._id}
-                      className="border-b border-slate-100 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70"
+                      className="border-b border-slate-100 align-top transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70"
                     >
-                      <td className="px-3 py-2">{log.userId}</td>
-                      <td className="max-w-xs px-3 py-2">
-                        <span className="block truncate">{log.input}</span>
+                      <td className="max-w-[12rem] px-4 py-3 align-top">
+                        <span className="block break-all font-mono text-xs text-slate-700 dark:text-slate-200">
+                          {log.userId}
+                        </span>
                       </td>
-                      <td className="px-3 py-2">{log.output?.analysis}</td>
-                      <td className="px-3 py-2">{log.output?.fix}</td>
-                      <td className="whitespace-nowrap px-3 py-2">
+                      <td className="max-w-xs min-w-0 px-4 py-3 align-top text-slate-700 dark:text-slate-200">
+                        <CodeSnippet
+                          text={log.input}
+                          maxHeightClassName="max-h-24"
+                        />
+                      </td>
+                      <td className="max-w-xs min-w-0 px-4 py-3 align-top text-slate-700 dark:text-slate-200">
+                        <LogPreviewCell text={log.output?.analysis ?? ""} />
+                      </td>
+                      <td className="max-w-xs min-w-0 px-4 py-3 align-top text-slate-700 dark:text-slate-200">
+                        <LogPreviewCell text={log.output?.fix ?? ""} />
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3 align-top text-slate-500 dark:text-slate-400">
                         {formatDate(log.createdAt)}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-2">
+                      <td className="whitespace-nowrap px-4 py-3 align-top">
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
