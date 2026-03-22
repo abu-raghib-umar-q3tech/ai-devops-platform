@@ -1,0 +1,37 @@
+{
+  "name": "ai",
+  "version": "1.0.0",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "test": "echo \"No tests yet\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "exceljs": "^4.4.0",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.1",
+    "openai": "^6.32.0",
+    "pdfkit": "^0.18.0"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.5.0",
+    "@types/pdfkit": "^0.17.5",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

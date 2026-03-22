@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-slate-100 text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100;
+}
+
+@keyframes confirm-modal-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes confirm-modal-dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@layer utilities {
+  .animate-confirm-modal-backdrop {
+    animation: confirm-modal-backdrop-in 0.2s ease-out forwards;
+  }
+
+  .animate-confirm-modal-dialog {
+    animation: confirm-modal-dialog-in 0.2s ease-out forwards;
+    transform-origin: center;
+  }
+}
