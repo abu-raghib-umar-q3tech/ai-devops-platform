@@ -173,6 +173,38 @@ export function DashboardPage({
     void loadDashboardMeta();
   }, []);
 
+  // Check role on window visibility change (user returns to tab)
+  useEffect(() => {
+    const checkRole = async () => {
+      try {
+        const currentProfile = await getMe();
+        const tokenRole = getAuthRole();
+
+        if (currentProfile.role !== tokenRole) {
+          clearToken();
+          toast.error(
+            "Your account role has been changed. Please log in again.",
+            { duration: 5000 }
+          );
+          navigate("/login", { replace: true });
+        }
+      } catch {
+        // Ignore errors during check
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        void checkRole();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [navigate]);
+
   useEffect(() => {
     function onDocumentClick(event: MouseEvent) {
       const target = event.target;
@@ -259,7 +291,7 @@ export function DashboardPage({
       const limit = 100;
       const max = 500;
       const q = debouncedSearch || undefined;
-      for (;;) {
+      for (; ;) {
         const res = await getHistory({ page, limit, q });
         rows.push(...res.data);
         if (page >= res.totalPages || rows.length >= max) break;

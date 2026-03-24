@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { verify, type JwtPayload } from "jsonwebtoken";
+import { UserModel } from "../models/User";
 
 export type JwtUser = {
   id: string;
@@ -45,7 +46,7 @@ export function requireAuth(
   }
 }
 
-export function requireAdmin(
+export async function requireAdmin(
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
@@ -53,9 +54,27 @@ export function requireAdmin(
   if (!req.user) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Forbidden" });
+
+  try {
+    // Check current role from database for immediate role changes
+    const user = await UserModel.findById(req.user.id)
+      .select({ role: 1 })
+      .lean();
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    if (user.role !== "admin") {
+      return res.status(403).json({ message: "Forbidden - Admin access required" });
+    }
+
+    // Update req.user with current role from database
+    req.user.role = user.role;
+    return next();
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Authorization failed";
+    return res.status(500).json({ message });
   }
-  return next();
 }
 
