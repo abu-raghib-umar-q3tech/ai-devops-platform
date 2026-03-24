@@ -49,7 +49,11 @@ export async function getDashboardStats(
           {
             $group: {
               _id: {
-                $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+                $dateToString: {
+                  format: "%Y-%m-%d",
+                  date: "$createdAt",
+                  timezone: "+05:30" // IST timezone
+                },
               },
               count: { $sum: 1 },
             },

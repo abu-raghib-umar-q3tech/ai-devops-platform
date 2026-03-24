@@ -3,6 +3,7 @@ import { AppBrandAdminHeading } from "../components/AppBrand";
 import { CodeSnippet } from "../components/CodeSnippet";
 import { ConfirmModal } from "../components/ConfirmModal";
 import { DarkModeToggle } from "../components/DarkModeToggle";
+import { LogDetailsModal } from "../components/LogDetailsModal";
 import { LogPreviewCell } from "../components/LogPreviewCell";
 import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -795,32 +796,59 @@ export function AdminPage({
         </p>
       ) : null}
 
-      <section className="mb-8 grid gap-3 md:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-sm text-slate-500 dark:text-slate-400">Total users</p>
-          <p
-            className={`mt-1 text-2xl font-semibold ${loading ? "animate-pulse text-slate-300 dark:text-slate-600" : ""}`}
-          >
-            {totalUsers}
-          </p>
+      <section className="mb-8 grid gap-4 md:grid-cols-3">
+        <div className="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg hover:scale-[1.02] dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Total users</p>
+              <p
+                className={`mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100 ${loading ? "animate-pulse" : ""}`}
+              >
+                {totalUsers}
+              </p>
+            </div>
+            <div className="rounded-full bg-blue-100 p-3 dark:bg-blue-900/30">
+              <svg className="h-8 w-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </div>
+          </div>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-sm text-slate-500 dark:text-slate-400">Total logs</p>
-          <p
-            className={`mt-1 text-2xl font-semibold ${loading ? "animate-pulse text-slate-300 dark:text-slate-600" : ""}`}
-          >
-            {totalLogs}
-          </p>
+        <div className="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg hover:scale-[1.02] dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">Total logs</p>
+              <p
+                className={`mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100 ${loading ? "animate-pulse" : ""}`}
+              >
+                {totalLogs}
+              </p>
+            </div>
+            <div className="rounded-full bg-green-100 p-3 dark:bg-green-900/30">
+              <svg className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+          </div>
         </div>
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Total usage count
-          </p>
-          <p
-            className={`mt-1 text-2xl font-semibold ${loading ? "animate-pulse text-slate-300 dark:text-slate-600" : ""}`}
-          >
-            {totalUsageCount}
-          </p>
+        <div className="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg hover:scale-[1.02] dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                Total usage
+              </p>
+              <p
+                className={`mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100 ${loading ? "animate-pulse" : ""}`}
+              >
+                {totalUsageCount}
+              </p>
+            </div>
+            <div className="rounded-full bg-amber-100 p-3 dark:bg-amber-900/30">
+              <svg className="h-8 w-8 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -924,7 +952,7 @@ export function AdminPage({
                   users.map((user) => (
                     <tr
                       key={user._id}
-                      className="border-b border-slate-100 align-top transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70"
+                      className="border-b border-slate-100 align-top transition-all hover:bg-slate-50 hover:shadow-sm dark:border-slate-800 dark:hover:bg-slate-800/70"
                     >
                       <td className="px-4 py-3 align-top w-[30%]">
                         <span className="block truncate" title={user.email}>
@@ -951,15 +979,17 @@ export function AdminPage({
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
+                            disabled={user.role === "admin"}
                             onClick={() => void onChangeUserRole(user, "admin")}
-                            className="rounded-md border border-violet-300 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700 transition hover:bg-violet-100 dark:border-violet-700 dark:bg-violet-900/20 dark:text-violet-300 dark:hover:bg-violet-900/30"
+                            className="rounded-md border border-violet-300 bg-violet-50 px-2 py-1 text-xs font-medium text-violet-700 transition hover:bg-violet-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-violet-50 dark:border-violet-700 dark:bg-violet-900/20 dark:text-violet-300 dark:hover:bg-violet-900/30 dark:disabled:hover:bg-violet-900/20"
                           >
                             Make admin
                           </button>
                           <button
                             type="button"
+                            disabled={user.role === "user"}
                             onClick={() => void onChangeUserRole(user, "user")}
-                            className="rounded-md border border-emerald-300 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100 dark:border-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30"
+                            className="rounded-md border border-emerald-300 bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/30 dark:disabled:hover:bg-emerald-900/20"
                           >
                             Make user
                           </button>
@@ -1039,7 +1069,7 @@ export function AdminPage({
             type="text"
             value={filterUserId}
             onChange={(event) => setFilterUserId(event.target.value)}
-            placeholder="Filter by userId"
+            placeholder="Filter by user email"
             className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-indigo-500 transition focus:ring-2 dark:border-slate-700 dark:bg-slate-900"
           />
           <input
@@ -1063,7 +1093,7 @@ export function AdminPage({
           <table className="min-w-full text-left text-sm">
             <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200">
               <tr>
-                <th className="px-4 py-3">User ID</th>
+                <th className="px-4 py-3">User Email</th>
                 <th className="px-4 py-3">Input</th>
                 <th className="px-4 py-3">Analysis</th>
                 <th className="px-4 py-3">Fix</th>
@@ -1088,11 +1118,11 @@ export function AdminPage({
                   logs.map((log) => (
                     <tr
                       key={log._id}
-                      className="border-b border-slate-100 align-top transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70"
+                      className="border-b border-slate-100 align-top transition-all hover:bg-slate-50 hover:shadow-sm dark:border-slate-800 dark:hover:bg-slate-800/70"
                     >
                       <td className="max-w-[12rem] px-4 py-3 align-top">
-                        <span className="block break-all font-mono text-xs text-slate-700 dark:text-slate-200">
-                          {log.userId}
+                        <span className="block truncate text-sm text-slate-700 dark:text-slate-200" title={log.userEmail}>
+                          {log.userEmail}
                         </span>
                       </td>
                       <td className="max-w-xs min-w-0 px-4 py-3 align-top text-slate-700 dark:text-slate-200">
@@ -1151,44 +1181,10 @@ export function AdminPage({
       </section>
 
       {selectedLog ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4">
-          <div className="max-h-[90vh] w-full max-w-4xl overflow-auto rounded-xl border border-slate-700 bg-slate-950 p-5 shadow-2xl">
-            <div className="mb-4 flex items-center justify-between gap-2">
-              <h3 className="text-lg font-semibold text-slate-100">
-                Full log details
-              </h3>
-              <button
-                type="button"
-                onClick={() => setSelectedLog(null)}
-                className="rounded-md border border-slate-600 bg-slate-900 px-2 py-1 text-xs font-medium text-slate-200 hover:bg-slate-800"
-              >
-                Close
-              </button>
-            </div>
-            <div className="space-y-4 font-mono text-sm text-slate-100">
-              <div className="rounded-lg border border-slate-700 bg-slate-900 p-3">
-                <p className="mb-1 text-xs uppercase tracking-wide text-slate-400">
-                  Input
-                </p>
-                <pre className="whitespace-pre-wrap">{selectedLog.input}</pre>
-              </div>
-              <div className="rounded-lg border border-slate-700 bg-slate-900 p-3">
-                <p className="mb-1 text-xs uppercase tracking-wide text-slate-400">
-                  Analysis
-                </p>
-                <pre className="whitespace-pre-wrap">
-                  {selectedLog.output?.analysis}
-                </pre>
-              </div>
-              <div className="rounded-lg border border-slate-700 bg-slate-900 p-3">
-                <p className="mb-1 text-xs uppercase tracking-wide text-slate-400">
-                  Fix
-                </p>
-                <pre className="whitespace-pre-wrap">{selectedLog.output?.fix}</pre>
-              </div>
-            </div>
-          </div>
-        </div>
+        <LogDetailsModal
+          log={selectedLog}
+          onClose={() => setSelectedLog(null)}
+        />
       ) : null}
       <ConfirmModal
         isOpen={confirmState.isOpen}

@@ -82,12 +82,27 @@ export async function exportLogsCsv(req: AuthenticatedRequest, res: Response) {
       .lean();
 
     const header = ["input", "analysis", "fix", "createdAt"];
-    const rows = logs.map((log) => [
-      escapeCsvCell(log.input),
-      escapeCsvCell(log.output?.analysis ?? ""),
-      escapeCsvCell(log.output?.fix ?? ""),
-      escapeCsvCell(new Date(log.createdAt).toISOString()),
-    ]);
+    const rows = logs.map((log) => {
+      const date = new Date(log.createdAt);
+      // Format as: 25-Mar-2026 02:17AM (compact for CSV)
+      const day = date.toLocaleString("en-GB", { timeZone: "Asia/Kolkata", day: "2-digit" });
+      const month = date.toLocaleString("en-GB", { timeZone: "Asia/Kolkata", month: "short" });
+      const year = date.toLocaleString("en-GB", { timeZone: "Asia/Kolkata", year: "numeric" });
+      const time = date.toLocaleString("en-GB", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+      }).replace(" ", ""); // Remove space between time and AM/PM
+      const formatted = `${day}-${month}-${year} ${time}`;
+
+      return [
+        escapeCsvCell(log.input),
+        escapeCsvCell(log.output?.analysis ?? ""),
+        escapeCsvCell(log.output?.fix ?? ""),
+        escapeCsvCell(formatted),
+      ];
+    });
 
     const body = [header.join(","), ...rows.map((row) => row.join(","))].join(
       "\r\n"

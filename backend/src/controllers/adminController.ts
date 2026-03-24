@@ -199,10 +199,23 @@ export async function getAdminLogs(req: Request, res: Response) {
         .lean(),
     ]);
 
+    // Fetch user emails for all logs
+    const userIds = [...new Set(logs.map(log => log.userId))];
+    const users = await UserModel.find({ _id: { $in: userIds } })
+      .select({ _id: 1, email: 1 })
+      .lean();
+    const userEmailMap = new Map(users.map(u => [u._id.toString(), u.email]));
+
+    // Attach userEmail to each log
+    const logsWithEmail = logs.map(log => ({
+      ...log,
+      userEmail: userEmailMap.get(log.userId) ?? "unknown",
+    }));
+
     const totalPages = Math.max(1, Math.ceil(total / limit));
 
     return res.status(200).json({
-      data: logs,
+      data: logsWithEmail,
       total,
       page,
       totalPages,
@@ -270,16 +283,38 @@ export async function exportAdminLogs(req: Request, res: Response) {
       .select({ userId: 1, input: 1, output: 1, createdAt: 1 })
       .lean();
 
-    const header = ["userId", "input", "analysis", "fix", "createdAt"]
+    // Fetch user emails
+    const userIds = [...new Set(logs.map(log => log.userId))];
+    const users = await UserModel.find({ _id: { $in: userIds } })
+      .select({ _id: 1, email: 1 })
+      .lean();
+    const userEmailMap = new Map(users.map(u => [u._id.toString(), u.email]));
+
+    const header = ["userEmail", "input", "analysis", "fix", "createdAt"]
       .map(csvQuotedCell)
       .join(",");
     const rows = logs.map((log) => {
-      const created =
-        log.createdAt instanceof Date
-          ? log.createdAt.toISOString()
-          : String(log.createdAt ?? "");
+      let created = "";
+      if (log.createdAt instanceof Date) {
+        // Format as: 25-Mar-2026 02:17AM (compact for CSV)
+        const date = log.createdAt;
+        const day = date.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", day: "2-digit" });
+        const month = date.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", month: "short" });
+        const year = date.toLocaleDateString("en-GB", { timeZone: "Asia/Kolkata", year: "numeric" });
+        const time = date.toLocaleTimeString("en-GB", {
+          timeZone: "Asia/Kolkata",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true
+        }).replace(" ", ""); // Remove space between time and AM/PM
+        created = `${day}-${month}-${year} ${time}`;
+      } else {
+        created = String(log.createdAt ?? "");
+      }
+
+      const userEmail = userEmailMap.get(log.userId) ?? "unknown";
       return [
-        csvQuotedCell(log.userId),
+        csvQuotedCell(userEmail),
         csvQuotedCell(log.input ?? ""),
         csvQuotedCell(log.output?.analysis ?? ""),
         csvQuotedCell(log.output?.fix ?? ""),
@@ -306,7 +341,20 @@ export async function exportAdminLogsPdf(_req: Request, res: Response) {
       .sort({ createdAt: -1 })
       .select({ userId: 1, input: 1, output: 1, createdAt: 1 })
       .lean();
-    streamAdminLogsPdf(res, logs);
+
+    // Fetch user emails
+    const userIds = [...new Set(logs.map(log => log.userId))];
+    const users = await UserModel.find({ _id: { $in: userIds } })
+      .select({ _id: 1, email: 1 })
+      .lean();
+    const userEmailMap = new Map(users.map(u => [u._id.toString(), u.email]));
+
+    const logsWithEmail = logs.map(log => ({
+      ...log,
+      userEmail: userEmailMap.get(log.userId) ?? "unknown",
+    }));
+
+    streamAdminLogsPdf(res, logsWithEmail);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal Server Error";
     return res.status(500).json({ message });
@@ -319,7 +367,20 @@ export async function exportAdminLogsXlsx(_req: Request, res: Response) {
       .sort({ createdAt: -1 })
       .select({ userId: 1, input: 1, output: 1, createdAt: 1 })
       .lean();
-    await sendAdminLogsXlsx(res, "admin-logs.xlsx", logs);
+
+    // Fetch user emails
+    const userIds = [...new Set(logs.map(log => log.userId))];
+    const users = await UserModel.find({ _id: { $in: userIds } })
+      .select({ _id: 1, email: 1 })
+      .lean();
+    const userEmailMap = new Map(users.map(u => [u._id.toString(), u.email]));
+
+    const logsWithEmail = logs.map(log => ({
+      ...log,
+      userEmail: userEmailMap.get(log.userId) ?? "unknown",
+    }));
+
+    await sendAdminLogsXlsx(res, "admin-logs.xlsx", logsWithEmail);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Internal Server Error";
     return res.status(500).json({ message });

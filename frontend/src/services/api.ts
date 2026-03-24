@@ -51,6 +51,7 @@ export type AdminUser = {
 export type AdminLog = {
   _id: string;
   userId: string;
+  userEmail: string;
   input: string;
   output: {
     analysis: string;
