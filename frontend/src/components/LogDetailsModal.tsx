@@ -44,15 +44,15 @@ export function LogDetailsModal({
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950 p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h3 id="log-details-title" className="text-lg font-semibold text-slate-100">Log Analysis Details</h3>
-              <p className="mt-1 text-sm text-slate-400">
+        <div className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950 p-4 sm:p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+            <div className="flex-1">
+              <h3 id="log-details-title" className="text-base font-semibold text-slate-100 sm:text-lg">Log Analysis Details</h3>
+              <p className="mt-1 text-xs text-slate-400 sm:text-sm">
                 Created {formatDate(log.createdAt)}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={() => void copyAll()}
@@ -71,9 +71,9 @@ export function LogDetailsModal({
           </div>
         </div>
 
-        <div className="space-y-6 p-5">
-          <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
-            <div className="mb-3 flex items-center justify-between">
+        <div className="space-y-4 p-4 sm:space-y-6 sm:p-5">
+          <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-3 sm:p-4">
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <svg className="h-5 w-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />

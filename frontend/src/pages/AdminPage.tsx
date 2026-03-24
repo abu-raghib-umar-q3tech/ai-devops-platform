@@ -768,10 +768,10 @@ export function AdminPage({
   }
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-2">
+    <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:py-8">
+      <header className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <AppBrandAdminHeading />
-        <div className="flex items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <button
             type="button"
             onClick={() => navigate("/", { replace: true })}
@@ -796,7 +796,7 @@ export function AdminPage({
         </p>
       ) : null}
 
-      <section className="mb-8 grid gap-4 md:grid-cols-3">
+      <section className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div className="group rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-lg hover:scale-[1.02] dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
             <div>
@@ -852,7 +852,7 @@ export function AdminPage({
         </div>
       </section>
 
-      <div className="mb-6 flex flex-wrap items-center justify-end gap-2">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-2 sm:justify-end">
         <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
           Show:
           <select
@@ -1064,7 +1064,7 @@ export function AdminPage({
             ) : null}
           </div>
         </div>
-        <div className="mb-3 grid gap-2 md:grid-cols-3">
+        <div className="mb-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           <input
             type="text"
             value={filterUserId}

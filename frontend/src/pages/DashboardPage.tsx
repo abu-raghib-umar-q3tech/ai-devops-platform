@@ -358,10 +358,10 @@ export function DashboardPage({
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-8">
-      <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-8">
+      <header className="mb-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
         <AppBrandLockup variant="page" />
-        <div className="flex items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           {isAdmin ? (
             <button
               type="button"
@@ -382,7 +382,7 @@ export function DashboardPage({
         </div>
       </header>
 
-      <section className="mb-6 grid gap-3 md:grid-cols-4">
+      <section className="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
             <div>
@@ -549,9 +549,9 @@ export function DashboardPage({
       {/* Analyze Section - Full Width */}
       <section className="mb-8">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-3 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
             <h2 className="text-lg font-semibold">Analyze logs/code</h2>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={async () => {
@@ -595,14 +595,14 @@ export function DashboardPage({
                 </div>
               )}
             </div>
-            <div className="mt-3 flex items-center justify-between">
+            <div className="mt-3 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Press <kbd className="rounded bg-slate-200 px-1.5 py-0.5 font-mono text-xs dark:bg-slate-700">Ctrl+Enter</kbd> to analyze
               </p>
               <button
                 type="submit"
                 disabled={analyzing}
-                className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
               >
                 {analyzing ? (
                   <>
@@ -647,18 +647,18 @@ export function DashboardPage({
           ) : null}
 
           {result ? (
-            <div className="mt-4 rounded-xl border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 p-5 shadow-lg dark:border-green-900 dark:from-green-950/30 dark:to-emerald-950/30">
-              <div className="mb-4 flex items-center justify-between">
+            <div className="mt-4 rounded-xl border-2 border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 p-4 shadow-lg dark:border-green-900 dark:from-green-950/30 dark:to-emerald-950/30 sm:p-5">
+              <div className="mb-4 flex flex-col gap-3">
                 <div className="flex items-center gap-2">
-                  <div className="rounded-full bg-green-500 p-1">
+                  <div className="rounded-full bg-green-500 p-1 flex-shrink-0">
                     <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">Analysis Complete</h3>
-                  <span className="text-xs text-slate-500 dark:text-slate-400">(saved in History)</span>
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 sm:text-lg">Analysis Complete</h3>
+                  <span className="hidden text-xs text-slate-500 dark:text-slate-400 sm:inline">(saved in History)</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={() => {
@@ -689,7 +689,7 @@ export function DashboardPage({
                   >
                     📑 Copy All
                   </button>
-                  <div className="h-4 w-px bg-slate-300 dark:bg-slate-600"></div>
+                  <div className="hidden h-4 w-px bg-slate-300 dark:bg-slate-600 sm:block"></div>
                   <button
                     type="button"
                     onClick={() => {
@@ -707,7 +707,7 @@ export function DashboardPage({
                 </div>
               </div>
               <div className="space-y-4">
-                <div className="rounded-lg border border-blue-200 bg-white p-5 shadow-sm dark:border-blue-900 dark:bg-slate-900">
+                <div className="rounded-lg border border-blue-200 bg-white p-4 shadow-sm dark:border-blue-900 dark:bg-slate-900 sm:p-5">
                   <div className="mb-3 flex items-center gap-2">
                     <div className="rounded-full bg-blue-500 p-1.5">
                       <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -719,12 +719,12 @@ export function DashboardPage({
                     </h4>
                   </div>
                   <div className="prose max-w-none dark:prose-invert">
-                    <p className="whitespace-pre-wrap text-base leading-relaxed text-slate-800 dark:text-slate-200">
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800 dark:text-slate-200 sm:text-base">
                       {result.analysis}
                     </p>
                   </div>
                 </div>
-                <div className="rounded-lg border border-green-200 bg-white p-5 shadow-sm dark:border-green-900 dark:bg-slate-900">
+                <div className="rounded-lg border border-green-200 bg-white p-4 shadow-sm dark:border-green-900 dark:bg-slate-900 sm:p-5">
                   <div className="mb-3 flex items-center gap-2">
                     <div className="rounded-full bg-green-500 p-1.5">
                       <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -736,7 +736,7 @@ export function DashboardPage({
                     </h4>
                   </div>
                   <div className="prose max-w-none dark:prose-invert">
-                    <p className="whitespace-pre-wrap text-base leading-relaxed text-slate-800 dark:text-slate-200">
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-800 dark:text-slate-200 sm:text-base">
                       {result.fix}
                     </p>
                   </div>
@@ -748,9 +748,9 @@ export function DashboardPage({
       </section>
 
       <section>
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div className="mb-3 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
           <h2 className="text-lg font-semibold">History</h2>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
               You analyzed {todayCount} logs today
             </span>
