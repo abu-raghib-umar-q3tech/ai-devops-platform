@@ -101,15 +101,30 @@ function handleUnauthorized(): void {
   }
 }
 
+function handleForbidden(): void {
+  clearToken();
+  toast.error("Access denied. Your permissions may have changed.");
+  if (globalThis.location.pathname.startsWith("/admin")) {
+    globalThis.location.assign("/");
+  }
+}
+
 async function parseJson<T>(
   response: Response,
   options?: { handleAuthError?: boolean }
 ): Promise<T> {
   const data = (await response.json()) as T & { message?: string };
   const shouldHandleAuthError = options?.handleAuthError ?? false;
-  if (response.status === 401 && shouldHandleAuthError) {
-    handleUnauthorized();
+
+  if (shouldHandleAuthError) {
+    if (response.status === 401) {
+      handleUnauthorized();
+    }
+    if (response.status === 403) {
+      handleForbidden();
+    }
   }
+
   if (!response.ok) {
     throw new Error(data.message || "Request failed");
   }

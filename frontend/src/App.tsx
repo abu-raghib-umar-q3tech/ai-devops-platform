@@ -51,7 +51,10 @@ function App() {
           path="/admin"
           element={
             <ProtectedRoute requireAdmin={true}>
-              <AdminPage />
+              <AdminPage
+                isDark={isDark}
+                onToggleDarkMode={() => setIsDark((prev) => !prev)}
+              />
             </ProtectedRoute>
           }
         />

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AppBrandAdminHeading } from "../components/AppBrand";
 import { CodeSnippet } from "../components/CodeSnippet";
 import { ConfirmModal } from "../components/ConfirmModal";
+import { DarkModeToggle } from "../components/DarkModeToggle";
 import { LogPreviewCell } from "../components/LogPreviewCell";
 import toast from "react-hot-toast";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -123,7 +124,7 @@ function readAdminQueryFromLocation(): {
   };
 }
 
-function ShimmerBlock({ className }: { className?: string }) {
+function ShimmerBlock({ className }: Readonly<{ className?: string }>) {
   return (
     <div
       className={`animate-pulse rounded-md bg-slate-200/90 dark:bg-slate-700/80 ${className ?? ""}`}
@@ -131,7 +132,7 @@ function ShimmerBlock({ className }: { className?: string }) {
   );
 }
 
-function UsersTableSkeleton({ rows }: { rows: number }) {
+function UsersTableSkeleton({ rows }: Readonly<{ rows: number }>) {
   return (
     <tbody aria-hidden>
       {Array.from({ length: rows }, (_, i) => (
@@ -139,22 +140,22 @@ function UsersTableSkeleton({ rows }: { rows: number }) {
           key={i}
           className="border-b border-slate-100 dark:border-slate-800"
         >
-          <td className="max-w-xs px-3 py-2">
+          <td className="px-4 py-3 align-top w-[30%]">
             <ShimmerBlock className="h-4 w-full" />
           </td>
-          <td className="px-3 py-2">
+          <td className="px-4 py-3 align-top w-[15%]">
             <ShimmerBlock className="h-4 w-32" />
           </td>
-          <td className="px-3 py-2">
+          <td className="px-4 py-3 align-top w-[15%]">
             <ShimmerBlock className="h-4 w-28" />
           </td>
-          <td className="px-3 py-2">
+          <td className="px-4 py-3 align-top w-[10%]">
             <ShimmerBlock className="h-6 w-14 rounded-full" />
           </td>
-          <td className="px-3 py-2">
+          <td className="px-4 py-3 align-top w-[10%]">
             <ShimmerBlock className="h-4 w-8" />
           </td>
-          <td className="px-3 py-2">
+          <td className="px-4 py-3 align-top w-[20%]">
             <div className="flex gap-2">
               <ShimmerBlock className="h-7 w-16" />
               <ShimmerBlock className="h-7 w-16" />
@@ -167,7 +168,7 @@ function UsersTableSkeleton({ rows }: { rows: number }) {
   );
 }
 
-function LogsTableSkeleton({ rows }: { rows: number }) {
+function LogsTableSkeleton({ rows }: Readonly<{ rows: number }>) {
   return (
     <tbody aria-hidden>
       {Array.from({ length: rows }, (_, i) => (
@@ -205,12 +206,12 @@ function LogsTableSkeleton({ rows }: { rows: number }) {
   );
 }
 
-function PaginationBar(props: {
+function PaginationBar(props: Readonly<{
   page: number;
   totalPages: number;
   disabled?: boolean;
   onPageChange: (p: number) => void;
-}) {
+}>) {
   const { page, totalPages, disabled, onPageChange } = props;
   const pages = buildPageList(page, totalPages);
 
@@ -231,7 +232,9 @@ function PaginationBar(props: {
         {pages.map((item, index) =>
           item === "dots" ? (
             <span
-              key={`dots-${index}`}
+              key={`dots-${pages
+                .slice(0, index)
+                .filter((p) => p === "dots").length}`}
               className="px-1 text-sm text-slate-400"
               aria-hidden
             >
@@ -263,7 +266,15 @@ function PaginationBar(props: {
   );
 }
 
-export function AdminPage() {
+type AdminPageProps = {
+  isDark: boolean;
+  onToggleDarkMode: () => void;
+};
+
+export function AdminPage({
+  isDark,
+  onToggleDarkMode,
+}: Readonly<AdminPageProps>) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -414,6 +425,49 @@ export function AdminPage() {
     }, 300);
     return () => clearTimeout(timeout);
   }, [filterUserId, setSearchParams]);
+
+  // Check admin access on window visibility change (user returns to tab)
+  useEffect(() => {
+    const checkAdminAccess = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL ?? "http://localhost:5000/api"}/auth/me`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = (await response.json()) as { user: { role: string } };
+          if (data.user.role !== "admin") {
+            clearToken();
+            toast.error(
+              "Your admin access has been revoked. Redirecting...",
+              { duration: 5000 }
+            );
+            navigate("/", { replace: true });
+          }
+        }
+      } catch {
+        // Ignore errors during check
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        void checkAdminAccess();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [navigate]);
 
   const queryKey = searchParams.toString();
   useEffect(() => {
@@ -724,6 +778,7 @@ export function AdminPage() {
           >
             Back to App
           </button>
+          <DarkModeToggle isDark={isDark} onToggle={onToggleDarkMode} />
           <button
             type="button"
             onClick={onLogout}
@@ -839,17 +894,17 @@ export function AdminPage() {
           </div>
         </div>
         <div className="max-h-[28rem] overflow-auto rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <table className="min-w-full text-left text-sm">
-            <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-800">
+          <table className="w-full text-left text-sm">
+            <thead className="sticky top-0 z-10 border-b border-slate-200 bg-slate-50 text-slate-700 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-200">
               <tr>
-                <th className="px-3 py-2 text-left align-middle">Email</th>
-                <th className="px-3 py-2 text-left align-middle">First name</th>
-                <th className="px-3 py-2 text-left align-middle">Last name</th>
-                <th className="px-3 py-2 text-left align-middle">Role</th>
-                <th className="px-3 py-2 text-left align-middle">
+                <th className="px-4 py-3 w-[30%]">Email</th>
+                <th className="px-4 py-3 w-[15%]">First name</th>
+                <th className="px-4 py-3 w-[15%]">Last name</th>
+                <th className="px-4 py-3 w-[10%]">Role</th>
+                <th className="px-4 py-3 w-[10%]">
                   Usage Count
                 </th>
-                <th className="px-3 py-2 text-left align-middle">Actions</th>
+                <th className="px-4 py-3 w-[20%]">Actions</th>
               </tr>
             </thead>
             {loading ? (
@@ -860,7 +915,7 @@ export function AdminPage() {
                   <tr>
                     <td
                       colSpan={6}
-                      className="px-3 py-10 text-center text-sm text-slate-500 dark:text-slate-400"
+                      className="px-4 py-10 text-center text-sm text-slate-500 dark:text-slate-400"
                     >
                       No results found for this page
                     </td>
@@ -869,30 +924,30 @@ export function AdminPage() {
                   users.map((user) => (
                     <tr
                       key={user._id}
-                      className="border-b border-slate-100 transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70"
+                      className="border-b border-slate-100 align-top transition-colors hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/70"
                     >
-                      <td className="max-w-xs align-middle px-3 py-2">
+                      <td className="px-4 py-3 align-top w-[30%]">
                         <span className="block truncate" title={user.email}>
                           {user.email}
                         </span>
                       </td>
-                      <td className="align-middle px-3 py-2 text-slate-800 dark:text-slate-100">
+                      <td className="px-4 py-3 align-top text-slate-800 dark:text-slate-100 w-[15%]">
                         {user.firstName?.trim() ? user.firstName : "—"}
                       </td>
-                      <td className="align-middle px-3 py-2 text-slate-800 dark:text-slate-100">
+                      <td className="px-4 py-3 align-top text-slate-800 dark:text-slate-100 w-[15%]">
                         {user.lastName?.trim() ? user.lastName : "—"}
                       </td>
-                      <td className="align-middle px-3 py-2">
+                      <td className="px-4 py-3 align-top w-[10%]">
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${roleBadgeClass(user.role)}`}
                         >
                           {user.role}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap align-middle px-3 py-2 font-semibold">
+                      <td className="px-4 py-3 align-top font-semibold whitespace-nowrap w-[10%]">
                         {user.usageCount ?? 0}
                       </td>
-                      <td className="whitespace-nowrap align-middle px-3 py-2">
+                      <td className="px-4 py-3 align-top whitespace-nowrap w-[20%]">
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
