@@ -91,20 +91,29 @@ export async function sendAdminLogsXlsx(
   });
 
   sheet.columns = [
-    { header: "User ID", key: "userId", width: 30 },
-    { header: "Created (UTC)", key: "createdAt", width: 24 },
+    { header: "User Email", key: "userEmail", width: 30 },
+    { header: "Created", key: "createdAt", width: 26 },
     { header: "Input", key: "input", width: 65 },
     { header: "Analysis", key: "analysis", width: 65 },
     { header: "Fix", key: "fix", width: 65 },
   ];
 
   for (const log of logs) {
+    // Format date matching UI: "25 Mar 2026, 2:17 AM"
     const created =
       log.createdAt instanceof Date
-        ? log.createdAt.toISOString()
+        ? log.createdAt.toLocaleString("en-GB", {
+          timeZone: "Asia/Kolkata",
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true
+        })
         : String(log.createdAt ?? "");
     sheet.addRow({
-      userId: log.userId,
+      userEmail: (log as any).userEmail ?? log.userId,
       createdAt: created,
       input: log.input ?? "",
       analysis: log.output?.analysis ?? "",
@@ -145,13 +154,22 @@ export async function sendUserLogsXlsx(
     { header: "Input", key: "input", width: 70 },
     { header: "Analysis", key: "analysis", width: 70 },
     { header: "Fix", key: "fix", width: 70 },
-    { header: "Created (UTC)", key: "createdAt", width: 24 },
+    { header: "Created", key: "createdAt", width: 26 },
   ];
 
   for (const log of logs) {
+    // Format date matching UI: "25 Mar 2026, 2:17 AM"
     const created =
       log.createdAt instanceof Date
-        ? log.createdAt.toISOString()
+        ? log.createdAt.toLocaleString("en-GB", {
+          timeZone: "Asia/Kolkata",
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true
+        })
         : String(log.createdAt ?? "");
     sheet.addRow({
       input: log.input ?? "",

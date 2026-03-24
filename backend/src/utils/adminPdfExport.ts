@@ -205,9 +205,9 @@ export function streamAdminLogsPdf(res: Response, logs: LeanLog[]): void {
   );
   doc.pipe(res);
 
-  // Wide text columns for log content; userId + date narrower
+  // Wide text columns for log content; userEmail + date narrower
   const colWidths = [88, 92, 168, 168, 168];
-  const labels = ["User ID", "Created (UTC)", "Input", "Analysis", "Fix"];
+  const labels = ["User Email", "Created (UTC)", "Input", "Analysis", "Fix"];
   const tableWidth = colWidths.reduce((a, b) => a + b, 0);
   const startX = MARGIN;
 
@@ -235,10 +235,18 @@ export function streamAdminLogsPdf(res: Response, logs: LeanLog[]): void {
     }
     const created =
       log.createdAt instanceof Date
-        ? log.createdAt.toISOString()
+        ? log.createdAt.toLocaleString("en-GB", {
+          timeZone: "Asia/Kolkata",
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true
+        })
         : String(log.createdAt ?? "");
     const cells = [
-      log.userId,
+      (log as any).userEmail ?? log.userId,
       created,
       log.input ?? "",
       log.output?.analysis ?? "",
